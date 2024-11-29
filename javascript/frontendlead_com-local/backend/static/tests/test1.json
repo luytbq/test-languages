@@ -1,0 +1,43 @@
+{
+    "title": "1. Flatten I",
+    "content": "<p>Write a function to flatten a multi-dimensional array into a single-level array. Provide both recursive and iterative solutions.<\/p>\n<p>The problem involves transforming an array that contains nested arrays of various levels into a single-level array. For example, given an input like <code>[[1, 2, [3]], 4]<\/code>, the expected output would be <code>[1, 2, 3, 4]<\/code>. This challenge must be addressed in two distinct manners:<\/p>\n<ul>\n<li><strong>Recursive Approach:<\/strong> This method leverages the concept of recursion, where a function calls itself. When the function encounters an element that is an array, it calls itself with this nested array, accumulating all the elements into a single, flattened array. This approach elegantly navigates through the layers of nested arrays, extracting and combining elements into one cohesive structure.<\/li>\n<li><strong>Iterative Approach:<\/strong> Differing from recursion, the iterative solution utilizes a stack to manage and process the elements. This method iteratively examines each element, and when an array is encountered, its elements are added to the stack to be processed. This continues until all elements are flattened into a single array, ensuring efficient handling without the overhead of recursive function calls.<\/li>\n<\/ul>\n<p><strong>Example:<\/strong> Let&#8217;s illustrate the problem and solutions with a concrete example.<\/p>\n<pre><code>Input: [[1, 2, [3, [4, 5]]], 6]\r\n\r\nRecursive Output: [1, 2, 3, 4, 5, 6]\r\nIterative Output: [1, 2, 3, 4, 5, 6]<\/code><\/pre>\n<p>This task not only tests your understanding of array manipulation but also evaluates your ability to implement solutions using different programming paradigms. Whether you opt for the elegance of recursion or the control of iteration, mastering this challenge will sharpen your problem-solving skills and prepare you for frontend interviews.<\/p>\n<p>As you embark on solving this problem, consider the implications of each approach, including the ease of implementation, efficiency, and potential limitations such as stack overflow in recursion for deeply nested arrays. Good luck!<\/p>\n",
+    "slug": "flatten-arrays-recursively-and-iteratively",
+    "date": "2024-02-26T02:39:16",
+    "featuredImage": null,
+    "info": {
+        "company": [
+            "Facebook",
+            "Amazon",
+            "Google",
+            "Robinhood",
+            "Zillow",
+            "Airbnb",
+            "OpenAI",
+            "Microsoft",
+            "Netflix"
+        ],
+        "category": [
+            "Array"
+        ],
+        "type": [
+            "Coding"
+        ]
+    },
+    "common": {
+        "difficulty": [
+            "Easy"
+        ],
+        "videoLink": {
+            "url": "https:\/\/www.youtube.com\/embed\/UV9Lp-3uwwg?si=sIkEur5qGudwyPgh"
+        },
+        "comingSoon": false,
+        "subtitle": null,
+        "premiumQuestion": false,
+        "studyPlan": [
+            "2 weeks",
+            "1 month",
+            "3 months",
+            "6 months"
+        ]
+    }
+}

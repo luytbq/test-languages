@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Engine</title>
+</head>
+
+<body>
+    <h1>Test Engine</h1>
+    <textarea id="submission" rows="10" cols="50" placeholder="Write your JavaScript code here..."></textarea>
+    <br>
+    <button onclick="runCode()">Run Tests</button>
+    <pre id="output">
+    </pre>
+
+    <script>
+        const outputEl = document.getElementById("output");
+        const textarea = document.getElementById("submission");
+
+        textarea.innerText = `
+function flattenArray(value) {
+    if (value.length == 0) return value;
+    
+        let stack = value;
+        let result = [];
+        while (stack.length > 0) {
+    
+        let el = stack.pop();
+        if (el && el.length) {
+            stack.push(...el)
+            continue;
+        }
+        result.unshift(el);
+        }
+        return result;
+    }
+    
+\n// Do not edit below this line
+\nexport default flattenArray;`
+;
+
+        async function runCode() {
+            outputEl.textContent = "";
+            const submission = document.getElementById("submission").value;
+            const result = await fetch('/run', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ submission }),
+            })
+                .then(res => {
+                    // try {
+                    //     let json = res.json();
+                    //     return json;
+                    // } catch (e) {
+                    //     return res.text();
+                    // }
+                    return res.text();
+                });
+            ;
+
+            console.log(result);
+            outputEl.textContent = result.error || result.output || result;
+        }
+    </script>
+</body>
+
+</html>
