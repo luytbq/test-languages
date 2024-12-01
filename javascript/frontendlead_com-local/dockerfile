@@ -40,7 +40,6 @@ COPY --from=go-builder /app/main ./main
 
 # Copy static files and templates for the Go app
 COPY backend/static/ ./static/
-COPY backend/index.html ./
 
 # Copy Node.js test engine from the Node builder stage
 WORKDIR /test-engine
@@ -49,5 +48,7 @@ COPY --from=node-builder /test-engine/ ./
 # Expose the backend service port
 EXPOSE 9080
 
+WORKDIR /app
+
 # Command to start the backend server
-CMD ["/app/main"]
+CMD ["./main"]
