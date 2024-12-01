@@ -30,16 +30,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error reading response body: %v", err)
 	}
-
-	// // Parse the JSON response
-	// var jsonResponse map[string]interface{}
-	// if err := json.Unmarshal(resBody, &jsonResponse); err != nil {
-	// 	log.Fatalf("Error parsing JSON response: %v", err)
-	// }
-	// log.Printf("Response JSON:\n%v", jsonResponse)
-
-	filename := "response.txt"
-	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 666)
+	filename := "response.json"
+	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		log.Fatalf("Open file error: %v", err)
 	}
@@ -54,4 +46,20 @@ func main() {
 	// }
 
 	// log.Printf("Response JSON:\n%s", prettyJSON.String())
+}
+
+func writeToFile(filename string, bytes []byte) error {
+	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		log.Printf("open file error: %s", err.Error())
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.Write(bytes)
+	if err != nil {
+		log.Printf("open file error: %s", err.Error())
+	}
+
+	return err
 }

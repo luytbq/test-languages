@@ -1,0 +1,7 @@
+p, pre, ul, li {
+  font-size: 1rem;
+}
+
+.hidden {
+  display: none;
+}

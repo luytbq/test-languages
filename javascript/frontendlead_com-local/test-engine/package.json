@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "directories": {
     "test": "tests"
   },
@@ -12,8 +13,8 @@
   "author": "luytbq",
   "license": "ISC",
   "dependencies": {
+    "isolated-vm": "^5.0.1",
     "jasmine": "^5.4.0",
-    "jasmine-core": "^5.4.0",
-    "vm2": "^3.9.19"
+    "jasmine-core": "^5.4.0"
   }
 }

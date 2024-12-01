@@ -1,0 +1,12 @@
+# Ignore logs and temporary files
+**/tmp
+*.log
+
+# Ignore Go build artifacts
+**/main
+
+# Ignore Node modules (will be rebuilt in container)
+**/node_modules
+
+# Ignore Git files
+.git

@@ -4,12 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Engine</title>
+    <title>Javascript</title>
+    <style>
+        #tiny-editor {
+            min-height: 500px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Test Engine</h1>
-    <textarea id="submission" rows="10" cols="50" placeholder="Write your JavaScript code here..."></textarea>
+    <h1>Javascript</h1>
+    <pre 
+        id="tiny-editor"
+        data-tiny-editor
+        data-formatblock="no"
+        data-bold="no"
+        data-italic="no"
+        data-underline="no"
+        data-fontname="no"
+        data-forecolor="no"
+        data-justifyleft="no"
+        data-justifycenter="no"
+        data-justifyright="no"
+        data-insertorderedlist="no"
+        data-insertunorderedlist="no"
+        data-outdent="no"
+        data-indent="no"
+        data-remove-format="no"
+        data-autofocus="no"
+        rows="30" cols="80" >
+    </pre>
     <br>
     <button onclick="runCode()">Run Tests</button>
     <pre id="output">
@@ -17,37 +41,30 @@
 
     <script>
         const outputEl = document.getElementById("output");
-        const textarea = document.getElementById("submission");
+        const tinyEditor = document.getElementById("tiny-editor");
 
-        textarea.innerText = `
+        let userInput = ''
+
+        tinyEditor.innerHTML = `
 function flattenArray(value) {
-    if (value.length == 0) return value;
+    return [];
+}
     
-        let stack = value;
-        let result = [];
-        while (stack.length > 0) {
-    
-        let el = stack.pop();
-        if (el && el.length) {
-            stack.push(...el)
-            continue;
-        }
-        result.unshift(el);
-        }
-        return result;
-    }
-    
-\n// Do not edit below this line
-\nexport default flattenArray;`
+// Do not edit below this line
+export default flattenArray;`
 ;
 
         async function runCode() {
             outputEl.textContent = "";
-            const submission = document.getElementById("submission").value;
+
+            let text = tinyEditor.innerHTML;
+            console.log(text);
+
+            // console.log(text);
             const result = await fetch('/run', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ submission }),
+                body: JSON.stringify({ submission: text }),
             })
                 .then(res => {
                     // try {
@@ -66,4 +83,5 @@ function flattenArray(value) {
     </script>
 </body>
 
+<script src="https://unpkg.com/tiny-editor/dist/bundle.js"></script>
 </html>

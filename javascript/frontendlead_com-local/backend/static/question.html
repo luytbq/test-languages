@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Javascript Coding Questions</title>
+</head>
+<style>
+    .main-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    #tiny-editor {
+        min-height: 450px;
+    }
+
+    #test-cases {
+        min-height: 100px;
+    }
+
+    @media (min-width: 640px) {
+        .main-content {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+<link rel="stylesheet" href="./static/tabs.css">
+<script src="./static/tabs.js"></script>
+<link rel="stylesheet" href="./static/styles.css">
+
+<body>
+    <h2><a href="/home.html">Back to home</a></h2>
+    <br>
+    <h3 id="question-title"></h3>
+    <div class="main-content">
+        <div id="question-statement"></div>
+        <div>
+            <pre id="tiny-editor" data-tiny-editor data-formatblock="no" data-bold="no" data-italic="no" data-underline="no"
+                data-fontname="no" data-forecolor="no" data-justifyleft="no" data-justifycenter="no" data-justifyright="no"
+                data-insertorderedlist="no" data-insertunorderedlist="no" data-outdent="no" data-indent="no"
+                data-remove-format="no" data-autofocus="no" rows="30" cols="80">
+            </pre>
+            <button onclick="runCode()">Run Tests</button>
+            <pre id="output"> </pre>
+        </div>
+    </div>
+
+    <div id="test-cases">
+    <!-- 
+        <div class="tab">
+            <button class="tablinks" onclick="openCity(event, 'London')">London</button>
+            <button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
+            <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+        </div>
+        
+            <div id="London" class="tabcontent">
+                <h3>London</h3>
+                <p>London is the capital city of England.</p>
+            </div>
+            
+            <div id="Paris" class="tabcontent">
+                <h3>Paris</h3>
+                <p>Paris is the capital of France.</p>
+            </div>
+            
+            <div id="Tokyo" class="tabcontent">
+                <h3>Tokyo</h3>
+                <p>Tokyo is the capital of Japan.</p>
+            </div> 
+        -->
+    </div>
+</body>
+<script src="https://unpkg.com/tiny-editor/dist/bundle.js"></script>
+<script>
+    const url = new URL(window.location.href)
+    const slug = url.searchParams.get('slug');
+
+    function queryQuestionDetail() {
+        fetch("/api/questions?" + url.searchParams.toString())
+            .then(res => res.json())
+            .then(question => {
+                console.log(question);
+                renderQuestion(question);
+            })
+    }
+
+    function renderQuestion(question) {
+        document.getElementById("question-title").innerText = question.title;
+        document.getElementById("question-statement").innerHTML = question.problemStatement;
+
+        document.getElementById("tiny-editor").innerText = question.starterJSCode;
+        renderTestCases(question.testCases);
+    }
+
+    function renderTestCases(testCases) {
+        const tab = document.createElement('div');
+        tab.classList.add('tab')
+        document.getElementById("test-cases").appendChild(tab);
+
+        for (let tc of testCases) {
+            const tabContent = document.createElement('div');
+            tabContent.id = "test-case" + tc.id
+            tabContent.classList.add("tabcontent");
+            const pre = document.createElement('pre');
+            tabContent.appendChild(pre);
+            pre.innerText = `//${tc.description} \n\n ${tc.test}`;
+
+            document.getElementById("test-cases").appendChild(tabContent);
+            const tabButton = document.createElement('button');
+            tabButton.classList.add("tablinks");
+            tabButton.onclick = (event) => openTab(event, tabContent.id)
+            tabButton.innerText = "Test case " + (tc.id + 1);
+            tab.appendChild(tabButton)
+        }
+    }
+
+    function runCode() {
+        const submission = document.getElementById("tiny-editor").innerText;
+        console.log(submission);
+
+        const body = {submission, slug };
+
+        fetch("/api/run", { method: 'POST', body: JSON.stringify(body)})
+            .then(res => res.json())
+            .then(console.log)
+    }
+
+    queryQuestionDetail();
+</script>
+
+</html>

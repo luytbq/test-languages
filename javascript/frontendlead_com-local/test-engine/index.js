@@ -1,12 +1,10 @@
-const fs = require("fs");
-const path = require("path");
-const Jasmine = require("jasmine");
+import * as fs from "fs";
+import * as vm from "vm";
+
 
 // Get the paths for the user code and test case from the environment variables
 const userCodePath = process.env.USER_CODE_PATH;
 const testCasePath = process.env.TEST_CASE_PATH;
-
-console.log(process.env)
 
 if (!userCodePath || !testCasePath) {
   console.error(
@@ -17,59 +15,44 @@ if (!userCodePath || !testCasePath) {
   process.exit(1);
 }
 
-// Read the user code and test case from the specified files
-let userCode, testCaseCode;
-try {
-  userCode = fs.readFileSync(userCodePath, "utf8");
-  testCaseCode = fs.readFileSync(testCasePath, "utf8");
-} catch (err) {
-  console.error(
-    JSON.stringify({
-      error: `Failed to read user code or test case: ${err.message}`,
-    })
-  );
-  process.exit(1);
-}
+const importJasmine = import('./node_modules/jasmine/lib/jasmine.js', {with: {type: 'module'}});
+// const importJasmineCore = import('./node_modules/jasmine-core/lib/jasmine-core.js', {with: {type: 'module'}});
+const importUserCode = import(userCodePath, {with: {type: 'module'}});
 
-// Save the user code and test case to temporary files to import them
-const userCodeFilePath = path.join(__dirname, "userCode.js");
-const testCaseFilePath = path.join(__dirname, "testCase.js");
-fs.writeFileSync(userCodeFilePath, userCode);
-fs.writeFileSync(testCaseFilePath, testCaseCode);
+importJasmine.then((module) => {
+  const jasmine = new module.default();
 
-// Import the user's function and the test case
-let userFunction, testCase;
-try {
-  userFunction = require(userCodeFilePath);
-  testCase = require(testCaseFilePath);
-} catch (err) {
-  console.error(
-    JSON.stringify({
-      error: `Failed to import user code or test case: ${err.message}`,
-    })
-  );
-  process.exit(1);
-}
+  // console.log(jasmine.env.it);
 
-// Set up Jasmine and run the test case
-const jasmine = new Jasmine();
+  globalThis.jasmine = jasmine;
+  globalThis.describe = jasmine.env.describe;
+  globalThis.it = jasmine.env.it;
+  globalThis.expect = jasmine.env.expect;
 
-jasmine.describe('User Provided Test', () => {
-  jasmine.it('should run the user-defined test case', (done) => {
-    // Run the test case
-    try {
-      testCase(userFunction);
-      done();
-    } catch (err) {
-      console.error(
-        JSON.stringify({
-          error: `Error running the test case: ${err.message}`,
-        })
-      );
-      process.exit(1);
-    }
-  });
-});
+  const result = vm.runInThisContext(  "it('test it', (done) => { expect('1').to.deep.equal('2'); done(); })");
+  console.log(result.getFullName);
+  // vm.runInThisContext(  "console.log('abcbac')");
+})
 
-// Execute the Jasmine test suite
-jasmine.execute();
+// importJasmineCore.then((jasmineCore) => {
+//   importUserCode.then((userCodeModule) => {
+//     // Make Jasmine's functions globally available
+//     // const jasmine = jasmineCore.default || jasmineCore; // Adjust for how the library exports
+
+//     // console.log(jasmineCore.default);
+//     console.log(jasmineCore.default);
+
+//     // globalThis.jasmine = jasmineCore.default;
+//     // globalThis.describe = jasmine.describe;
+//     // globalThis.it = jasmine.it;
+//     // globalThis.expect = jasmine.expect;
+
+//     // const functionName = userCodeModule.default.name;
+//     // globalThis[functionName] = userCodeModule.default
+
+//     // const testScript = fs.readFileSync(testCasePath, "utf-8");
+
+//     // // vm.runInThisContext(testScript, { filename: testScriptName });
+//     // vm.runInThisContext(testScript);
+//   })
+// });
